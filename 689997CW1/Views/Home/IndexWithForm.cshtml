@@ -1,4 +1,4 @@
-﻿@model _689997CW1.Models.Contacts
+﻿@model _689997CW1.Models.Post
 @{
     ViewData["Title"] = "IndexWithForm";
 }
@@ -9,9 +9,9 @@
 </head>
 <body>
     <form action="/Home/Index" method="post">
-        <input type="text" name="Id" value="" />
-        <input type="text" name="FirstName" value="" />
-        <input type="text" name="LastName" value="" />
+        <input type="text" name="PostId" value="" />
+        <input type="text" name="PostAuthor" value="" />
+        <input type="text" name="PostText" value="" />
         <button type="submit" value="Submit">Submit</button>
     </form>
 </body>

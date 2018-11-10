@@ -40,11 +40,13 @@ namespace _689997CW1
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context,
+        UserManager<IdentityUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -63,6 +65,10 @@ namespace _689997CW1
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            //DbSeeder.SeedDb(context, userManager);
+
+
 
             app.UseMvc(routes =>
             {

@@ -1,0 +1,39 @@
+@model _689997CW1.Models.Post
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+<div>
+    <h4>Post</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PostAuthor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PostAuthor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PostText)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PostText)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.PostId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+</body>
+</html>

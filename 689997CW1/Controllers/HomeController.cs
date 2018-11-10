@@ -14,21 +14,15 @@ namespace _689997CW1.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View("IndexWithForm");
+            return View();
         }
 
         [HttpPost]
-        public IActionResult Index(Contacts contact)
+        public IActionResult Index(Post post)
         {
-            //Contacts contact = new Contacts()
-            //{
-            //    Id = id,
-            //    FirstName = "Aleksandr",
-            //    LastName = "Slobodov"
-            //};
             if (ModelState.IsValid)
             {
-                return View(contact);
+                return View(post);
             }
             return View("IndexWithForm");
         }
@@ -42,9 +36,9 @@ namespace _689997CW1.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            //ViewData["Message"] = "Your contact page.";
 
-            return View();
+            return RedirectToAction("Create", "Post");
         }
 
         public IActionResult Privacy()
