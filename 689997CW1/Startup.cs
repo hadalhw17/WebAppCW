@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _689997CW1.Data;
+using _689997CW1.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,7 +38,7 @@ namespace _689997CW1
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
@@ -46,7 +47,7 @@ namespace _689997CW1
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context,
-        UserManager<IdentityUser> userManager)
+        UserManager<User> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -66,7 +67,7 @@ namespace _689997CW1
 
             app.UseAuthentication();
 
-            //DbSeeder.SeedDb(context, userManager);
+            DbSeeder.SeedDb(context, userManager);
 
 
 

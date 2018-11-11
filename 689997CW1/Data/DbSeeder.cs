@@ -9,31 +9,31 @@ namespace _689997CW1.Data
 {
     public static class DbSeeder
     {
-        // public static void SeedDb(ApplicationDbContext context, UserManager<IdentityUser> userManager)
-        // {
-        //     SeedContacts(context);
-        //     SeedUser(userManager);
-        // }
+         public static void SeedDb(ApplicationDbContext context, UserManager<User> userManager)
+         {
+             SeedContacts(context);
+             SeedUser(userManager);
+         }
 
-        // private static void SeedUser(UserManager<IdentityUser> userManager)
-        // {
-        //     IdentityUser user = new IdentityUser
-        //     {
-        //         UserName = "alex@email.com",
-        //         Email = "alex@email.com"
-        //     };
+         private static void SeedUser(UserManager<User> userManager)
+         {
+            User user = new User
+             {
+                 UserName = "alex@email.com",
+                 Email = "alex@email.com"
+             };
 
-        //     userManager.CreateAsync(user, "Password123!").Wait();
-        // }
+             userManager.CreateAsync(user, "Password123!").Wait();
+         }
 
-        // private static void SeedContacts(ApplicationDbContext context)
-        // {
-        //     //Seeding the database here
-        //     context.Database.EnsureCreated();
-        //     context.User.Add(
-        //         new User() { Name = "Alex" }
-        //     );
-        //     context.SaveChanges();
-        // }
+         private static void SeedContacts(ApplicationDbContext context)
+         {
+             //Seeding the database here
+             context.Database.EnsureCreated();
+             context.User.Add(
+                 new User() { Name = "Alex" }
+             );
+             context.SaveChanges();
+         }
     }
 }
