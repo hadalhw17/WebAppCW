@@ -18,6 +18,10 @@ namespace _689997CW1.Models
         [MaxLength(200)]
         public String PostText { get; set; }
 
+        [Required]
+        [DataType(DataType.DateTime)]
+        public DateTime TimeStamp { get; set; }
+
         public Comment[] Comments { get; set; }
     }
 }

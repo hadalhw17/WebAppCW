@@ -67,7 +67,7 @@ namespace _689997CW1
 
             app.UseAuthentication();
 
-            DbSeeder.SeedDb(context, userManager);
+            //DbSeeder.SeedDb(context, userManager);
 
 
 
