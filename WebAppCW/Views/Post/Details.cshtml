@@ -1,0 +1,74 @@
+@model WebAppCW.Models.PostComments
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<style>
+    .comment {
+        border-top: 1px dotted #ccc;
+        border-bottom: 1px dotted #ccc;
+    }
+    .user_name {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .comments-list .media {
+        border-bottom: 1px dotted #ccc;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+
+</head>
+<body>
+
+    <div>
+        <h4>Post</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Post.PostAuthor)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Post.PostAuthor)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Post.PostText)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Post.PostText)
+            </dd>
+        </dl>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="page-header">
+                        <h1><small class="pull-right">@Model.Comments.Count comments</small></h1>
+                    </div>
+                    <div class="comments-list">
+                        @for (int i = 0; i < Model.Comments.Count; i++)
+                        {
+                        <div class="comment">
+                            <p class="user_name">Author: @Model.Comments[i].AuthorName</p>
+                            <p class="media-heading">  -@Model.Comments[i].CommentText</p>
+                        </div>
+                        <br />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="CreateComment" asp-route-id="@Model.Post.PostId">Write new comment</a>
+    <div>
+        <a asp-action="Edit" asp-route-id="post.PostId">Edit</a> |
+        <a asp-action="Index" >Back to List</a>
+    </div>
+</body>
+</html>
