@@ -28,11 +28,18 @@ namespace WebAppCW
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsCommenter", policy => policy.RequireClaim("IsCommenter", "true"));
+                options.AddPolicy("IsBlogger", policy => policy.RequireClaim("IsAdmin", "true"));
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -41,8 +48,7 @@ namespace WebAppCW
             services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
-            services.AddMvc();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,16 +66,11 @@ namespace WebAppCW
                 app.UseHsts();
             }
 
-            //app.UseWelcomePage();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-
-            //DbSeeder.SeedDb(context, userManager);
-
-
 
             app.UseMvc(routes =>
             {
@@ -77,6 +78,8 @@ namespace WebAppCW
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            DbSeeder.SeedDbAsync(context, userManager).Wait();
         }
     }
 }

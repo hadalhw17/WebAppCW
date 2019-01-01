@@ -1,7 +1,7 @@
 @model WebAppCW.Models.Post
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Edit post";
 }
 
 <!DOCTYPE html>
@@ -21,13 +21,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PostId" />
             <div class="form-group">
-                <label asp-for="PostAuthor" class="control-label"></label>
-                <input asp-for="PostAuthor" class="form-control" />
-                <span asp-validation-for="PostAuthor" class="text-danger"></span>
+                <label asp-for="PostTitle" class="control-label"></label>
+                <input asp-for="PostTitle" class="form-control" />
+                <span asp-validation-for="PostTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PostText" class="control-label"></label>
-                <input asp-for="PostText" class="form-control" />
+                <textarea asp-for="PostText" class="form-control"></textarea>
                 <span asp-validation-for="PostText" class="text-danger"></span>
             </div>
             <div class="form-group">

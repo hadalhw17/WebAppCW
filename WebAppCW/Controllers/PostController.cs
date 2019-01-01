@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAppCW.Data;
 using WebAppCW.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAppCW
 {
@@ -32,6 +33,7 @@ namespace WebAppCW
         // GET
         // Print the list of all posts.
         [HttpGet]
+        [Authorize(Policy = "IsBlogger")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Post.ToListAsync());
@@ -70,6 +72,7 @@ namespace WebAppCW
         // GET
         // Creates a /Post/Create view.
         [HttpGet]
+        [Authorize(Policy = "IsBlogger")]
         public IActionResult Create()
         {
             return View();
@@ -79,7 +82,8 @@ namespace WebAppCW
         // Adds newly created article to the databse.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,PostAuthor,PostText")] Post post)
+        [Authorize(Policy = "IsBlogger")]
+        public async Task<IActionResult> Create(Post post)
         {
             // Set name of post author to the name of current user
             var user = await GetCurrentUserAsync();
@@ -105,6 +109,7 @@ namespace WebAppCW
         // GET
         // Takes id and a post from a database and passes them to Edit View.
         [HttpGet]
+        [Authorize(Policy = "IsBlogger")]
         public async Task<IActionResult> Edit(int? id)
         {
             // 404 if id isn't valid.
@@ -128,7 +133,8 @@ namespace WebAppCW
         // Updates database with edited post.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,PostAuthor,PostText")] Post post)
+        [Authorize(Policy = "IsBlogger")]
+        public async Task<IActionResult> Edit(int id, [Bind("PostId,PostTitle,PostText")] Post post)
         {
             // 404 if ids not match.
             if (id != post.PostId)
@@ -141,6 +147,9 @@ namespace WebAppCW
                 try
                 {
                     // Apply changes to the database.
+                    // Set name of post author to the name of current user
+                    var user = await GetCurrentUserAsync();
+                    post.PostAuthor = _userManager.GetUserName(User);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
@@ -166,6 +175,7 @@ namespace WebAppCW
         // Delete post from database. Selects post and
         // Passes it to Delete view.
         [HttpGet]
+        [Authorize(Policy = "IsBlogger")]
         public async Task<IActionResult> Delete(int? id)
         {
             //404 if id isn't valid.
@@ -192,6 +202,7 @@ namespace WebAppCW
         // Removes a post from a database.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "IsBlogger")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             // Select post by Id.
@@ -214,6 +225,7 @@ namespace WebAppCW
         }
 
         [HttpGet]
+        [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> AddComment(int? id)
         {
             var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
@@ -227,6 +239,7 @@ namespace WebAppCW
         }
 
         [HttpPost]
+        [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> AddComment(Comment comment, int? id)
         {
             _context.Comment.Add(comment);
@@ -246,6 +259,7 @@ namespace WebAppCW
             return View("Details", pc);
         }
 
+        [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> CreateComment(int? id)
         {
             var post = await _context.Post

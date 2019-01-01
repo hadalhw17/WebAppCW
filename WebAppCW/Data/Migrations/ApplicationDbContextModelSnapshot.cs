@@ -162,6 +162,9 @@ namespace WebAppCW.Data.Migrations
 
                     b.Property<string>("PostText")
                         .IsRequired()
+                        .HasMaxLength(2000);
+
+                    b.Property<string>("PostTitle")
                         .HasMaxLength(200);
 
                     b.Property<DateTime>("TimeStamp");

@@ -8,14 +8,18 @@ namespace WebAppCW.Models
         [Required]
         public int PostId { get; set; }
 
-        [Required]
         [MinLength(2)]
         [MaxLength(20)]
         public String PostAuthor { get; set; }
 
         [Required]
-        [MinLength(10)]
+        [MinLength(2)]
         [MaxLength(200)]
+        public String PostTitle { get; set; }
+
+        [Required]
+        [MinLength(10)]
+        [MaxLength(2000)]
         public String PostText { get; set; }
 
         [Required]
