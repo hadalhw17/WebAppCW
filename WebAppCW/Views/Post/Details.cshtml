@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
 @model WebAppCW.Models.PostComments
 
 @{
@@ -10,6 +13,7 @@
         border-top: 1px dotted #ccc;
         border-bottom: 1px dotted #ccc;
     }
+
     .user_name {
         font-size: 14px;
         font-weight: bold;
@@ -43,7 +47,20 @@
             <dd>
                 @Html.DisplayFor(model => model.Post.PostText)
             </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Likes)
+            </dt>
+            <dd>
+                <a>@Model.Likes.Count()</a>
+            </dd>
         </dl>
+
+        @if ((await AuthorizationService.AuthorizeAsync(User, "IsBlogger")).Succeeded)
+        {
+            <a class="btn btn-primary" asp-action="AddLike" asp-route-id="@Model.Post.PostId">Like</a>
+        }
+
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
@@ -53,11 +70,11 @@
                     <div class="comments-list">
                         @for (int i = 0; i < Model.Comments.Count; i++)
                         {
-                        <div class="comment">
-                            <p class="user_name">Author: @Model.Comments[i].AuthorName</p>
-                            <p class="media-heading">  -@Model.Comments[i].CommentText</p>
-                        </div>
-                        <br />
+                            <div class="comment">
+                                <p class="user_name">Author: @Model.Comments[i].AuthorName</p>
+                                <p class="media-heading">  -@Model.Comments[i].CommentText</p>
+                            </div>
+                            <br />
                         }
                     </div>
                 </div>
@@ -66,9 +83,13 @@
     </div>
 
     <a asp-action="CreateComment" asp-route-id="@Model.Post.PostId">Write new comment</a>
-    <div>
-        <a asp-action="Edit" asp-route-id="post.PostId">Edit</a> |
-        <a asp-action="Index" >Back to List</a>
-    </div>
+    @if ((await AuthorizationService.AuthorizeAsync(User, "IsBlogger")).Succeeded)
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="post.PostId">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    }
+
 </body>
 </html>

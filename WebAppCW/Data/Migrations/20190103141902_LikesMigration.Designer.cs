@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppCW.Data;
 
 namespace WebAppCW.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190103141902_LikesMigration")]
+    partial class LikesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,32 +152,13 @@ namespace WebAppCW.Data.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("WebAppCW.Models.Like", b =>
-                {
-                    b.Property<int>("LikeId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PostId");
-
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("UserName");
-
-                    b.HasKey("LikeId");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Likes");
-                });
-
             modelBuilder.Entity("WebAppCW.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Likes");
 
                     b.Property<string>("PostAuthor")
                         .HasMaxLength(20);
@@ -190,7 +173,11 @@ namespace WebAppCW.Data.Migrations
 
                     b.Property<DateTime>("TimeStamp");
 
+                    b.Property<string>("UserId");
+
                     b.HasKey("PostId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Post");
                 });
@@ -295,15 +282,10 @@ namespace WebAppCW.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WebAppCW.Models.Like", b =>
+            modelBuilder.Entity("WebAppCW.Models.Post", b =>
                 {
-                    b.HasOne("WebAppCW.Models.Post")
-                        .WithMany("Likes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("WebAppCW.Models.User")
-                        .WithMany("Likes")
+                        .WithMany("UserPosts")
                         .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618

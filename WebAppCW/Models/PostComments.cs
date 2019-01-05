@@ -7,5 +7,6 @@ namespace WebAppCW.Models
     {
         public Post Post { get; set; }
         public IList<Comment> Comments{ get; set; }
+        public IList<Like> Likes { get; set; }
     }
 }

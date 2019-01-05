@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WebAppCW.Models
 {
@@ -6,5 +7,6 @@ namespace WebAppCW.Models
     {
         public Post Post { get; set; }
         public Comment Comment { get; set; }
+        public List<Like> Likes { get; set; }
     }
 }

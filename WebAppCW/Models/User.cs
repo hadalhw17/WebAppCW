@@ -9,11 +9,15 @@ namespace WebAppCW.Models
 {
     public class User:IdentityUser
     {
+        public User()
+        {
+            Likes = new List<Like>();
+        }
         public String Name { get; set; }
 
         public DateTime DateOfBirth { get; set; }
 
-        public Post[] UserPosts { get; set; }
+        public List<Like> Likes { get; set; }
 
     }
 }

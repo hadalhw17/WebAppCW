@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebAppCW.Models
@@ -25,5 +26,7 @@ namespace WebAppCW.Models
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime TimeStamp { get; set; }
+
+        public List<Like> Likes { get; set; }
     }
 }

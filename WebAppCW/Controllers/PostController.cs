@@ -9,6 +9,7 @@ using WebAppCW.Data;
 using WebAppCW.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace WebAppCW
 {
@@ -53,12 +54,14 @@ namespace WebAppCW
             // Returns first post with matching Id, or if is not found returns null. 
             var post = await _context.Post
                 .FirstOrDefaultAsync(m => m.PostId == id);
-            var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
+            var comments = _context.Comment.Where(x => x.PostID == id).ToList();
+            var likes = _context.Likes.Where(x => x.PostId == id).ToList();
 
             PostComments pc = new PostComments
             {
                 Post = post,
-                Comments = comments
+                Comments = comments,
+                Likes = likes
             };
 
             // 404 if post isn't valid.
@@ -207,9 +210,16 @@ namespace WebAppCW
         {
             // Select post by Id.
             var post = await _context.Post.FindAsync(id);
+            var likes =  _context.Likes.Where(x => x.PostId == id).ToList();
 
             // Remove post from database.
             _context.Post.Remove(post);
+
+            // Delete all likes related to this post
+           _context.Likes.RemoveRange(likes);
+
+            // REmove all comments related to this post 
+           _context.Comment.RemoveRange(_context.Comment.Where(x => x.PostID == id ).ToList());
 
             // Apply changes.
             await _context.SaveChangesAsync();
@@ -248,11 +258,13 @@ namespace WebAppCW
             var post = await _context.Post
     .FirstOrDefaultAsync(m => m.PostId == id);
             var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
+            var likes = _context.Likes.Where(x => x.PostId == id).ToList();
 
             PostComments pc = new PostComments
             {
                 Post = post,
-                Comments = comments
+                Comments = comments,
+                Likes = likes
             };
 
 
@@ -274,6 +286,55 @@ namespace WebAppCW
             pc.Comment.PostID = post.PostId;
 
             return View("AddComment", pc);
+        }
+
+        [Authorize(Policy = "IsCommenter")]
+        public async Task<IActionResult> AddLike(int? id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            var username = HttpContext.User.Identity.Name;
+
+            _context.Update(post);
+
+            await _context.SaveChangesAsync();
+
+            var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
+
+            var likes = _context.Likes.Where(x => x.PostId == id && x.UserName == username).ToList();
+            bool likeExists = likes.Count() != 0;
+
+            if(likeExists)
+            {
+                _context.RemoveRange(likes);
+            }
+            else
+            {
+                Like like = new Like
+                {
+                    PostId = post.PostId,
+                    UserName = username
+                };
+                _context.Add(like);
+
+            }
+            var _likes = _context.Likes.Where(x => x.PostId == id).ToList();
+
+            PostComments pc = new PostComments
+            {
+                Post = post,
+                Comments = comments,
+                Likes = _likes
+            };
+
+            await _context.SaveChangesAsync();
+
+
+            // 404 if post isn't valid.
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction("Details", new { id = post.PostId});
         }
     }
 }

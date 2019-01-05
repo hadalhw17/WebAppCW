@@ -16,5 +16,6 @@ namespace WebAppCW.Data
         public DbSet<WebAppCW.Models.User> User { get; set; }
         public DbSet<WebAppCW.Models.Post> Post { get; set; }
         public DbSet<WebAppCW.Models.Comment> Comment { get; set; }
+        public DbSet<WebAppCW.Models.Like> Likes { get; set; }
     }
 }
