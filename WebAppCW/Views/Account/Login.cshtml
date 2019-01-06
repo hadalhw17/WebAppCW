@@ -1,0 +1,32 @@
+﻿@model LoginViewModel
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="card" style="width:500px; margin-left: auto; margin-right: auto; margin-top: 50px;">
+    <form method="post" asp-controller="Account" asp-action="Login" class="text-center" style="color: #757575;">
+        <div asp-validation-summary="@ValidationSummary.ModelOnly"></div>
+
+        <h5 class="card-header info-color white-text text-center py-4">
+            <strong>Sign in</strong>
+        </h5>
+
+        <div class="card-body px-lg-5 pt-0" style="margin:10px;">
+            <div class="md-form mt-0">
+                <input asp-for="Email" class="form-control mb-4" placeholder="User Name" />
+                <span asp-validation-for="Email"></span>
+            </div>
+
+            <div class="md-form mt-0">
+                <input asp-for="Password" class="form-control mb-4" placeholder="Password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+
+            <div>
+                <input type="submit" value="Login" class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" />
+            </div>
+        </div>
+
+
+    </form>
+</div>

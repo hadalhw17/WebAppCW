@@ -252,6 +252,9 @@ namespace WebAppCW
         [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> AddComment(Comment comment, int? id)
         {
+            // Set name of post author to the name of current user
+            var user = await GetCurrentUserAsync();
+            comment.AuthorName = _userManager.GetUserName(User);
             _context.Comment.Add(comment);
             _context.SaveChanges();
 

@@ -2,31 +2,46 @@
 @{
     ViewBag.Title = "Register";
 }
-<h1>Register</h1>
 
-<form method="post" asp-controller="Account" asp-action="Register">
-    <div asp-validation-summary="@ValidationSummary.ModelOnly"></div>
+<div class="card" style="width: 500px; margin-left: auto; margin-right: auto; margin-top: 50px;">
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>Sign Up</strong>
+    </h5>
 
-    <div>
-        <label asp-for="Username"></label>
-        <input asp-for="Username" />
-        <span asp-validation-for="Username"></span>
+    <div class="card-body px-lg-5 pt-0" style="margin-top: 10px;">
+        <form method="post" asp-controller="Account" asp-action="Register" class="text-center" style="color: #757575;">
+            <div asp-validation-summary="@ValidationSummary.ModelOnly"></div>
+
+            <div class="md-form mt-0">
+                <input asp-for="Username" class="form-control" placeholder="Username" />
+                <span asp-validation-for="Username"></span>
+            </div>
+
+            <div class="md-form mt-0">
+                <input asp-for="Email" class="form-control" placeholder="E-Mail" />
+                <span asp-validation-for="Email"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="col">
+                    <div class="md-form mt-0">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="Password" />
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="md-form mt-0">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                        <span asp-validation-for="ConfirmPassword" />
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <input type="submit" class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" value="Sign Up" />
+            </div>
+
+        </form>
     </div>
-
-    <div>
-        <label asp-for="Password"></label>
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-
-    <div>
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" />
-        <span asp-validation-for="ConfirmPassword"></span>
-    </div>
-
-    <div>
-        <input type="submit" value="Register" />
-    </div>
-
-</form>
+</div>

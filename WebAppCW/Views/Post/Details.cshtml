@@ -1,5 +1,8 @@
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+
 @inject IAuthorizationService AuthorizationService
+@inject SignInManager<User> SignInManager
 
 @model WebAppCW.Models.PostComments
 
@@ -56,9 +59,9 @@
             </dd>
         </dl>
 
-        @if ((await AuthorizationService.AuthorizeAsync(User, "IsBlogger")).Succeeded)
+        @if (SignInManager.IsSignedIn(User))
         {
-            <a class="btn btn-primary" asp-action="AddLike" asp-route-id="@Model.Post.PostId">Like</a>
+        <a class="btn btn-primary" asp-action="AddLike" asp-route-id="@Model.Post.PostId">Like</a>
         }
 
         <div class="container">
@@ -70,10 +73,12 @@
                     <div class="comments-list">
                         @for (int i = 0; i < Model.Comments.Count; i++)
                         {
-                            <div class="comment">
-                                <p class="user_name">Author: @Model.Comments[i].AuthorName</p>
-                                <p class="media-heading">  -@Model.Comments[i].CommentText</p>
-                            </div>
+                        <div class="comment">
+                            <i class="fas fa-user prefix"></i>
+                            <h2 class="user_name h2-responsive">Author: @Model.Comments[i].AuthorName</h2>
+                            <p class="pb-4">@Model.Comments[i].CommentTitle</p>
+                            <p class="media-heading">  -@Model.Comments[i].CommentText</p>
+                        </div>
                             <br />
                         }
                     </div>

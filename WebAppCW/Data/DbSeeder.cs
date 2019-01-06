@@ -19,7 +19,7 @@ namespace WebAppCW.Data
          public static async Task SeedDbAsync(ApplicationDbContext context, UserManager<User> userManager)
          {
             await SeedUser(userManager);
-            await SeedClaims(userManager);
+            //await SeedClaims(userManager);
          }
 
          private async static 
@@ -28,7 +28,7 @@ SeedUser(UserManager<User> userManager)
          {
             User user = new User
             {
-                UserName = "alex@email.com",
+                UserName = "AlexAdmin",
                 Email = "alex@email.com",
                 Name = "Alex",
                 SecurityStamp = Guid.NewGuid().ToString()
@@ -66,23 +66,23 @@ SeedUser(UserManager<User> userManager)
                 }
             }
         }
-        private async static Task SeedClaims(UserManager<User> _userManager)
-        {
-            var _users = _userManager.Users.ToList();
+        //private async static Task SeedClaims(UserManager<User> _userManager)
+        //{
+        //    var _users = _userManager.Users.ToList();
 
-            foreach(var user in _users)
-            {
-                var claimList = (await _userManager.GetClaimsAsync(user)).Select(p => p.Type);
-                if (!claimList.Contains("IsCommenter"))
-                {
-                    await _userManager.AddClaimAsync(user, new Claim("IsCommenter", "true"));
-                }
+        //    foreach(var user in _users)
+        //    {
+        //        var claimList = (await _userManager.GetClaimsAsync(user)).Select(p => p.Type);
+        //        if (!claimList.Contains("IsCommenter"))
+        //        {
+        //            await _userManager.AddClaimAsync(user, new Claim("IsCommenter", "true"));
+        //        }
 
-                if (!claimList.Contains("IsAdmin"))
-                {
-                    await _userManager.AddClaimAsync(user, new Claim("IsAdmin", "false"));
-                }
-            }
-        }
+        //        if (!claimList.Contains("IsAdmin"))
+        //        {
+        //            await _userManager.AddClaimAsync(user, new Claim("IsAdmin", "false"));
+        //        }
+        //    }
+        //}
     }
 }
