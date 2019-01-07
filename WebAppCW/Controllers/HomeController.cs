@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Created by Aleksandr Slobodov, student number 689997
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,22 +32,17 @@ namespace WebAppCW.Controllers
             _userManager = userManager;
         }
 
+        // GET
+        // Renders list of all posts on the home page.
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View("Index", await _context.Post.ToListAsync());
         }
 
-        [HttpPost]
-        public IActionResult Index(Post post)
-        {
-            if (ModelState.IsValid)
-            {
-                return View(post);
-            }
-            return View("IndexWithForm");
-        }
-
+        // GET
+        // Renders about page.
+        [HttpGet]
         public IActionResult About()
         {
             ViewData["Message"] = "Blog of Aleksandr Slobodov";
@@ -53,12 +50,16 @@ namespace WebAppCW.Controllers
             return View();
         }
 
+        // GET
+        // Renders contacts page.
         public IActionResult Contact()
         {
-     
             return View();
         }
 
+        // GET
+        // Renders post creation page.
+        [HttpGet]
         public IActionResult CreatePost()
         {
             return RedirectToAction("Create", "Post");

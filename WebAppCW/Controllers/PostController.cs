@@ -86,7 +86,7 @@ namespace WebAppCW
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "IsBlogger")]
-        public async Task<IActionResult> Create(Post post)
+        public async Task<IActionResult> Create([Bind("PostId, PostTitle, PostText")]Post post)
         {
             // Set name of post author to the name of current user
             var user = await GetCurrentUserAsync();
@@ -234,35 +234,44 @@ namespace WebAppCW
             return _context.Post.Any(e => e.PostId == id);
         }
 
+        // GET
+        // Returns a view that contains Comment creation form.
         [HttpGet]
         [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> AddComment(int? id)
         {
+            // Takes all comments from the database for post with id given
             var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
-            PostComment pc = new PostComment
-            {
-                Post = _context.Post.Find(id),
-                Comment = comments[0]
-            };
 
             return View("Index");
         }
 
+        // POST
+        // Logic for comment creation
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Policy = "IsCommenter")]
-        public async Task<IActionResult> AddComment(Comment comment, int? id)
+        public async Task<IActionResult> AddComment([Bind("CommentID, CommentTitle, CommentText, PostID")]Comment comment, int? id)
         {
-            // Set name of post author to the name of current user
+            // Set name of comment author to the name of current user.
             var user = await GetCurrentUserAsync();
             comment.AuthorName = _userManager.GetUserName(User);
+
+            // Adds comment to the database.
             _context.Comment.Add(comment);
             _context.SaveChanges();
 
-            var post = await _context.Post
-    .FirstOrDefaultAsync(m => m.PostId == id);
+            // Selects post with the given id from the database.
+            var post = await _context.Post.FirstOrDefaultAsync(m => m.PostId == id);
+
+            // Selects all of the comments for the post with the given id.
             var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
+
+            // Selects all of the likes for the post with the given id
             var likes = _context.Likes.Where(x => x.PostId == id).ToList();
 
+            // Packs everything to the view specific model that has post
+            // And a list of comments and likes for this post.
             PostComments pc = new PostComments
             {
                 Post = post,
@@ -270,48 +279,63 @@ namespace WebAppCW
                 Likes = likes
             };
 
-
-            return View("Details", pc);
+            return RedirectToAction("Details", new { id = post.PostId });
         }
 
+
+        // GET
+        // Returns a view that contains Comment creation form.
         [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> CreateComment(int? id)
         {
+            // Selects post from the database with the given id.
             var post = await _context.Post
                .FirstOrDefaultAsync(m => m.PostId == id);
+
+            // Selects all of the comments for the post with the given id.
             var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
 
+            // Creates a view specific model with an empty comment.
             PostComment pc = new PostComment
             {
                 Post = post,
                 Comment = new Comment()
             };
+
+            // Links comment and post by assigning post id to the comment's post id.
             pc.Comment.PostID = post.PostId;
 
             return View("AddComment", pc);
         }
 
+        // POST
+        // Contains logic for toggling likes on posts.
         [Authorize(Policy = "IsCommenter")]
         public async Task<IActionResult> AddLike(int? id)
         {
+            // Selects post from the database with the given id.
             var post = await _context.Post.FindAsync(id);
+
+            // Gets username of the current user.
             var username = HttpContext.User.Identity.Name;
 
-            _context.Update(post);
-
-            await _context.SaveChangesAsync();
-
+            // Selects all of the comments for the post with the given id.
             var comments = _context.Comment.Where(x => x.PostID == id).ToArray();
 
+            // Selects all of the likes for current post that user that is currently logged in left (can only be one).
             var likes = _context.Likes.Where(x => x.PostId == id && x.UserName == username).ToList();
+
             bool likeExists = likes.Count() != 0;
 
+
+            // If there is one then remove it from the database, add to it otherwise.
             if(likeExists)
             {
                 _context.RemoveRange(likes);
             }
             else
             {
+                // Creates like entity and adds it to the database.
                 Like like = new Like
                 {
                     PostId = post.PostId,
@@ -322,6 +346,7 @@ namespace WebAppCW
             }
             var _likes = _context.Likes.Where(x => x.PostId == id).ToList();
 
+            // Packs updated likes to the view specific model.
             PostComments pc = new PostComments
             {
                 Post = post,
