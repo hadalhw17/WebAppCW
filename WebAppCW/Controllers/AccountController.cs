@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebAppCW.Models;
@@ -79,6 +80,33 @@ namespace WebAppCW.Controllers
             }
             ModelState.AddModelError("", "Invalid login attempt");
             return View(_user);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "IsBlogger")]
+        public async Task<IActionResult> GetAll()
+        {
+            var _users = _userManager.Users;
+
+            return View("Index",_users);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "IsBlogger")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            var _user = await _userManager.FindByIdAsync(id.ToString());
+            var result = await _userManager.DeleteAsync(_user);
+
+            var _users = _userManager.Users;
+
+            if (result.Succeeded)
+            {
+                return View("Index", _users);
+            }
+            ModelState.AddModelError("", "Could not delete user.");
+
+            return View("Index", _users);
         }
     }
 }
